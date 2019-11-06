@@ -66,8 +66,21 @@ export default function Home() {
   function sendValue() {
     function verifyNumbers() {
       if (attempt === 1) {
-        looseGame();
+        return looseGame();
       }
+
+      function findBulls() {
+        // let bull = 0
+        // const secretNumbers = secretNumber.split('');
+
+        for (let i = 0; i < 4; i += 1) {
+          // if (userNumber[i] == secretNumbers[i]) {
+          //   bull += 1;
+          // }
+        }
+      }
+
+      return findBulls();
     }
 
     const attemptsRemaining = attempt;
