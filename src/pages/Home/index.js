@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Alert } from 'react-native';
+import { Text, Alert, TouchableOpacity } from 'react-native';
 import { Container } from '../../utils/styles';
 import {
   Title,
@@ -15,10 +15,18 @@ import {
 export default function Home() {
   const [secretNumber, setSecretNumber] = useState('');
   const [userNumber, setUserNumber] = useState([0, 0, 0, 0]);
+  const [bull] = useState(0);
+  const [cow] = useState(0);
+  const [attempt, setAttempt] = useState(10);
 
   function setRandomSecretNumber() {
-    const randomNumber = Math.round(Math.random() * 9999);
-    setSecretNumber(randomNumber.toString());
+    let randomNumber = Math.round(Math.random() * 9999).toString();
+
+    if (randomNumber.length < 4) {
+      randomNumber = randomNumber.padEnd(4, '0');
+    }
+
+    setSecretNumber(randomNumber);
   }
 
   useEffect(() => {
@@ -36,22 +44,39 @@ export default function Home() {
     }
 
     fullNumber[position] = number;
-    setUserNumber(fullNumber);
+    return setUserNumber(fullNumber);
   }
 
-  function verifyNumbers() {}
+  function restartGame() {
+    setUserNumber([0, 0, 0, 0]);
+    setRandomSecretNumber();
+    setAttempt(10);
+  }
+
+  function winGame() {
+    Alert.alert('Parabéns!', 'Você venceu!');
+    restartGame();
+  }
+
+  function looseGame() {
+    Alert.alert('Ops!', 'Você perdeu!');
+    restartGame();
+  }
 
   function sendValue() {
-    function restartGame() {
-      setUserNumber([0, 0, 0, 0]);
-      setRandomSecretNumber();
+    function verifyNumbers() {
+      if (attempt === 1) {
+        looseGame();
+      }
     }
+
+    const attemptsRemaining = attempt;
+    setAttempt(attemptsRemaining - 1);
 
     const number = [...userNumber];
     const choice = number.join('');
     if (choice === secretNumber) {
-      restartGame();
-      return Alert.alert('Parabéns!', 'Você acertou!');
+      return winGame();
     }
     return verifyNumbers();
   }
@@ -76,10 +101,13 @@ export default function Home() {
       <ButtonSend onPress={() => sendValue()}>
         <TextButtonSend>ENVIAR</TextButtonSend>
       </ButtonSend>
-      <TextTip>1B0C</TextTip>
-      <TextAttempts>Restam 10 tentativas</TextAttempts>
+      <TextTip>{`${bull}B${cow}C`}</TextTip>
+      <TextAttempts>{`Restam ${attempt} tentativas`}</TextAttempts>
 
       <Text style={{ marginTop: 50 }}>{secretNumber}</Text>
+      <TouchableOpacity onPress={() => restartGame()}>
+        <Text>reset</Text>
+      </TouchableOpacity>
     </Container>
   );
 }
