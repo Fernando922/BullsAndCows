@@ -42,7 +42,7 @@ export const TextButtonSend = styled.Text`
 `;
 
 export const TextTip = styled.Text`
-  font-size: 25px;
+  font-size: ${props => (props.start ? '15px' : '25px')};
   color: ${primary};
   font-weight: bold;
   margin-bottom: 20px;

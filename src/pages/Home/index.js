@@ -15,8 +15,8 @@ import {
 export default function Home() {
   const [secretNumber, setSecretNumber] = useState('');
   const [userNumber, setUserNumber] = useState([0, 0, 0, 0]);
-  const [bull] = useState(0);
-  const [cow] = useState(0);
+  const [bulls, setBulls] = useState(0);
+  const [cows, setCows] = useState(0);
   const [attempt, setAttempt] = useState(10);
 
   function setRandomSecretNumber() {
@@ -51,6 +51,8 @@ export default function Home() {
     setUserNumber([0, 0, 0, 0]);
     setRandomSecretNumber();
     setAttempt(10);
+    setBulls(0);
+    setCows(0);
   }
 
   function winGame() {
@@ -63,24 +65,32 @@ export default function Home() {
     restartGame();
   }
 
+  function findBulls() {
+    function convertToInteger(list) {
+      list.forEach((item, index) => {
+        list[index] = parseInt(item, 10);
+      });
+    }
+
+    let bullCount = 0;
+    const secretNumbers = secretNumber.split('');
+    convertToInteger(secretNumbers);
+
+    for (let i = 0; i < userNumber.length; i += 1) {
+      if (userNumber[i] === secretNumbers[i]) {
+        bullCount += 1;
+      }
+    }
+    setBulls(bullCount);
+  }
+
   function sendValue() {
     function verifyNumbers() {
       if (attempt === 1) {
-        return looseGame();
+        looseGame();
+      } else {
+        findBulls();
       }
-
-      function findBulls() {
-        // let bull = 0
-        // const secretNumbers = secretNumber.split('');
-
-        for (let i = 0; i < 4; i += 1) {
-          // if (userNumber[i] == secretNumbers[i]) {
-          //   bull += 1;
-          // }
-        }
-      }
-
-      return findBulls();
     }
 
     const attemptsRemaining = attempt;
@@ -89,9 +99,10 @@ export default function Home() {
     const number = [...userNumber];
     const choice = number.join('');
     if (choice === secretNumber) {
-      return winGame();
+      winGame();
+    } else {
+      verifyNumbers();
     }
-    return verifyNumbers();
   }
 
   return (
@@ -114,7 +125,11 @@ export default function Home() {
       <ButtonSend onPress={() => sendValue()}>
         <TextButtonSend>ENVIAR</TextButtonSend>
       </ButtonSend>
-      <TextTip>{`${bull}B${cow}C`}</TextTip>
+      {attempt === 10 ? (
+        <TextTip start>Escolha uma combinação para começar</TextTip>
+      ) : (
+        <TextTip>{`${bulls}B${cows}C`}</TextTip>
+      )}
       <TextAttempts>{`Restam ${attempt} tentativas`}</TextAttempts>
 
       <Text style={{ marginTop: 50 }}>{secretNumber}</Text>
