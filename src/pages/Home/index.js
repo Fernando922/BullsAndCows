@@ -83,6 +83,7 @@ export default function Home() {
     let bullCount = 0;
     const secretNumbers = secretNumber.split('');
     const userNumbers = [...userNumber];
+    const cowList = [];
     convertToInteger(secretNumbers);
 
     secretNumbers.map((number, index) => {
@@ -90,8 +91,12 @@ export default function Home() {
         if (userNumbers[i] === number) {
           if (index === i) {
             bullCount += 1;
-          } else {
-            cowCount += 1;
+            userNumbers.splice(i, 1, -1);
+          } else if (userNumbers[index] !== -1) {
+            if (cowList.find(pos => pos === i) === undefined && index >= i) {
+              cowCount += 1;
+              cowList.push(i);
+            }
           }
         }
       }
