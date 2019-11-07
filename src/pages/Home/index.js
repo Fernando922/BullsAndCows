@@ -26,7 +26,8 @@ export default function Home() {
       randomNumber = randomNumber.padEnd(4, '0');
     }
 
-    setSecretNumber(randomNumber);
+    // setSecretNumber(randomNumber);
+    setSecretNumber('8244');
   }
 
   useEffect(() => {
@@ -65,23 +66,37 @@ export default function Home() {
     restartGame();
   }
 
-  function findBulls() {
-    function convertToInteger(list) {
-      list.forEach((item, index) => {
-        list[index] = parseInt(item, 10);
-      });
+  function convertToInteger(list) {
+    list.forEach((item, index) => {
+      list[index] = parseInt(item, 10);
+    });
+  }
+
+  function findBullsAndCows() {
+    function updateState(bullCount, cowCount) {
+      setBulls(bullCount);
+      setCows(cowCount);
     }
 
+    // secretNumbers e userNumber
+    let cowCount = 0;
     let bullCount = 0;
     const secretNumbers = secretNumber.split('');
+    const userNumbers = [...userNumber];
     convertToInteger(secretNumbers);
 
-    for (let i = 0; i < userNumber.length; i += 1) {
-      if (userNumber[i] === secretNumbers[i]) {
-        bullCount += 1;
+    secretNumbers.map((number, index) => {
+      for (let i = 0; i < userNumbers.length; i += 1) {
+        if (userNumbers[i] === number) {
+          if (index === i) {
+            bullCount += 1;
+          } else {
+            cowCount += 1;
+          }
+        }
       }
-    }
-    setBulls(bullCount);
+      return updateState(bullCount, cowCount);
+    });
   }
 
   function sendValue() {
@@ -89,7 +104,7 @@ export default function Home() {
       if (attempt === 1) {
         looseGame();
       } else {
-        findBulls();
+        findBullsAndCows();
       }
     }
 
