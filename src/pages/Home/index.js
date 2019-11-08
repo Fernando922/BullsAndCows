@@ -38,6 +38,8 @@ export default function Home() {
         }
       }
       if (repeatedNumber) {
+        console.log(secretNumber);
+        console.log('repetiu vou gerar mais um');
         randomNumber();
       }
     }
@@ -89,18 +91,29 @@ export default function Home() {
     });
   }
 
-  function findBullsAndCows() {
-    function updateState(bullCount, cowCount) {
-      setBulls(bullCount);
-      setCows(cowCount);
-    }
-
-    // secretNumbers e userNumber
+  function findCows(bullCount, userNumbers, secretNumbers) {
     let cowCount = 0;
+
+    secretNumbers.map((number, index) => {
+      for (let i = 0; i < userNumbers.length; i += 1) {
+        if (userNumbers[i] === number) {
+          if (index !== i) {
+            cowCount += 1;
+            userNumbers.splice(i, 1, -1);
+          }
+        }
+      }
+      return true;
+    });
+
+    setBulls(bullCount);
+    setCows(cowCount);
+  }
+
+  function findBulls() {
     let bullCount = 0;
     const secretNumbers = secretNumber.split('');
     const userNumbers = [...userNumber];
-    const cowList = [];
     convertToInteger(secretNumbers);
 
     secretNumbers.map((number, index) => {
@@ -108,17 +121,14 @@ export default function Home() {
         if (userNumbers[i] === number) {
           if (index === i) {
             bullCount += 1;
+            secretNumbers.splice(i, 1, -2);
             userNumbers.splice(i, 1, -1);
-          } else if (userNumbers[index] !== -1) {
-            if (cowList.find(pos => pos === i) === undefined && index >= i) {
-              cowCount += 1;
-              cowList.push(i);
-            }
           }
         }
       }
-      return updateState(bullCount, cowCount);
+      return true;
     });
+    findCows(bullCount, userNumbers, secretNumbers);
   }
 
   function sendValue() {
@@ -126,7 +136,7 @@ export default function Home() {
       if (attempt === 1) {
         looseGame();
       } else {
-        findBullsAndCows();
+        findBulls();
       }
     }
 
