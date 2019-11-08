@@ -19,20 +19,37 @@ export default function Home() {
   const [cows, setCows] = useState(0);
   const [attempt, setAttempt] = useState(10);
 
-  function setRandomSecretNumber() {
-    let randomNumber = Math.round(Math.random() * 9999).toString();
-
-    if (randomNumber.length < 4) {
-      randomNumber = randomNumber.padEnd(4, '0');
+  function randomNumber() {
+    let secretRandomNumber = Math.round(Math.random() * 9999).toString();
+    if (secretRandomNumber.length < 4) {
+      secretRandomNumber = secretRandomNumber.padEnd(4, '0');
     }
+    setSecretNumber(secretRandomNumber);
+  }
 
-    // setSecretNumber(randomNumber);
-    setSecretNumber('8244');
+  function verifyRepeatedNumbers() {
+    if (secretNumber) {
+      const numbers = secretNumber.split('');
+      const sortedArray = numbers.slice().sort();
+      let repeatedNumber = false;
+      for (let i = 0; i < sortedArray.length - 1; i += 1) {
+        if (sortedArray[i + 1] === sortedArray[i]) {
+          repeatedNumber = true;
+        }
+      }
+      if (repeatedNumber) {
+        randomNumber();
+      }
+    }
   }
 
   useEffect(() => {
-    setRandomSecretNumber();
+    randomNumber();
   }, []);
+
+  useEffect(() => {
+    verifyRepeatedNumbers();
+  }, [secretNumber]);
 
   function changeNumber(position) {
     const fullNumber = [...userNumber];
@@ -50,7 +67,7 @@ export default function Home() {
 
   function restartGame() {
     setUserNumber([0, 0, 0, 0]);
-    setRandomSecretNumber();
+    randomNumber();
     setAttempt(10);
     setBulls(0);
     setCows(0);
