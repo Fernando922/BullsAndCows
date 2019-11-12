@@ -37,6 +37,7 @@ Link para o jogo em questão https://play.google.com/store/apps/details?id=com.o
 Resolvi fazer esse app por dois motivos: 
 
 1º Praticar desenvolvimento em React Native + Hooks
+
 2º Poder jogar sempre que quiser este jogo!
 
 Obs: O app ainda encontra-se em desenvolvimento, é lógico que ainda nao terminei! Vai ficar bonito ainda (um dia).
