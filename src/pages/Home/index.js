@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, Alert, TouchableOpacity } from 'react-native';
+import { Alert } from 'react-native';
 import { Container } from '../../utils/styles';
 import {
   Title,
@@ -38,8 +38,6 @@ export default function Home() {
         }
       }
       if (repeatedNumber) {
-        console.log(secretNumber);
-        console.log('repetiu vou gerar mais um');
         randomNumber();
       }
     }
@@ -178,11 +176,6 @@ export default function Home() {
         <TextTip>{`${bulls}B${cows}C`}</TextTip>
       )}
       <TextAttempts>{`Restam ${attempt} tentativas`}</TextAttempts>
-
-      <Text style={{ marginTop: 50 }}>{secretNumber}</Text>
-      <TouchableOpacity onPress={() => restartGame()}>
-        <Text>reset</Text>
-      </TouchableOpacity>
     </Container>
   );
 }
